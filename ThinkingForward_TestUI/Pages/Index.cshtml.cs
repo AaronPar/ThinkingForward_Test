@@ -27,8 +27,11 @@ namespace ThinkingForward_TestUI.Pages
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
             var data = await _dataService.GetResults();
+
             Data = PaginatedList<Data>.Create(data.Select(s => new Data(s)), pageIndex ?? 1, 100, 5);
+
             return Page();
         }
+
     }
 }
