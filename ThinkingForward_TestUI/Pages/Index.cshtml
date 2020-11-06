@@ -1,0 +1,88 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Thinking Forward</h1>
+</div>
+
+<div class="container row p-0 m-0">
+    <div class="col-12">
+        <h2 class="text-info">Lista de geohashes</h2>
+    </div>
+</div>
+
+<div class="col-12 border" p-3 mt-3>
+    <form method="post">
+        @if (Model.Data.Count() > 0)
+        {
+            <table class="table table-striped">
+                <tr class="table-secondary">
+                    <th>
+                        <label>Latitud</label>
+                    </th>
+                    <th>
+                        <label>Longitud</label>
+                    </th>
+                    <th>
+                        <label>GeoHash</label>
+                    </th>
+                    <th>
+                        <label>Prefijo &uacute;nico</label>
+                    </th>
+                </tr>
+                @foreach (var item in Model.Data)
+                {
+                    <tr>
+                        <td>@item.Latitude</td>
+                        <td>@item.Longitude</td>
+                        <td>@item.Geohash</td>
+                        <td>@item.Prefix</td>
+                    </tr>
+                }
+            </table>
+            <nav aria-label="Pagination" class="col-12">
+                @{
+                    var prevDisabled = !Model.Data.HasPreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.Data.HasNextPage ? "disabled" : "";
+                }
+                <ul class="pagination justify-content-end">
+                    <li class="page-item @prevDisabled">
+                        <a class="page-link"
+                           asp-page="./Index"
+                           asp-route-pageIndex="@(Model.Data.PageIndex - 1)"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    @foreach (var i in Model.Data.PageIndexesToDisplay)
+                    {
+                        var activeClass = i.IsActive ? "active" : "";
+
+                        <li class="page-item @activeClass">
+                            <a class="page-link"
+                               asp-page="./Pagination"
+                               asp-route-pageIndex="@(i.Index)">@i.Index</a>
+                        </li>
+                    }
+                    <li class="page-item @nextDisabled">
+                        <a class="page-link"
+                           asp-page="./Index"
+                           asp-route-pageIndex="@(Model.Data.PageIndex + 1)"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <p>No hay elementos para mostrar.</p>
+        }
+    </form>
+</div>
